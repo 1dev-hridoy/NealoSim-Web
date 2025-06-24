@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bot Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <!-- Sign In Modal -->
+    <div id="signInModal" class="fixed inset-0 z-50 flex items-center justify-center modal-backdrop">
+        <div class="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md mx-4 slide-in">
+            <div class="text-center mb-8">
+                <div class="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-robot text-white text-2xl"></i>
+                </div>
+                <h2 class="text-3xl font-bold text-gray-800 mb-2">Bot Dashboard</h2>
+                <p class="text-gray-600">Sign in to access your dashboard</p>
+            </div>
+            
+            <form id="signInForm" class="space-y-6">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Username</label>
+                    <input type="text" id="username" required 
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                    <input type="password" id="password" required 
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
+                </div>
+                
+                <button type="submit" 
+                        class="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white py-3 rounded-lg font-semibold hover:from-blue-600 hover:to-purple-700 transition-all transform hover:scale-105">
+                    Sign In
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main Dashboard -->
+    <div id="dashboard" class="hidden">
+        <!-- Header -->
+        <header class="gradient-bg text-white shadow-lg">
+            <div class="container mx-auto px-6 py-4">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-4">
+                        <div class="w-10 h-10 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
+                            <i class="fas fa-robot text-xl"></i>
+                        </div>
+                        <div>
+                            <h1 class="text-2xl font-bold" id="botName">Bot Dashboard</h1>
+                            <p class="text-blue-100" id="adminUsername">Welcome back, Admin</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center space-x-4">
+                        <div class="flex items-center space-x-2">
+                            <div class="w-3 h-3 bg-green-400 rounded-full pulse-animation" id="statusIndicator"></div>
+                            <span class="text-sm" id="statusText">Online</span>
+                        </div>
+                        <button onclick="signOut()" class="bg-white bg-opacity-20 px-4 py-2 rounded-lg hover:bg-opacity-30 transition-all">
+                            <i class="fas fa-sign-out-alt mr-2"></i>Sign Out
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Stats Cards -->
+        <div class="container mx-auto px-6 py-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <!-- Total Commands -->
+                <div class="bg-white rounded-xl shadow-lg p-6 card-hover" id="totalCommandsCard">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-600 text-sm font-medium">Total Commands</p>
+                            <p class="text-3xl font-bold text-gray-800" id="totalCommands">0</p>
+                            <p class="text-green-500 text-sm mt-1">+12% from last week</p>
+                        </div>
+                        <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-terminal text-blue-600 text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Total Users -->
+                <div class="bg-white rounded-xl shadow-lg p-6 card-hover" id="totalUsersCard">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-600 text-sm font-medium">Total Users</p>
+                            <p class="text-3xl font-bold text-gray-800" id="totalUsers">0</p>
+                            <p class="text-green-500 text-sm mt-1">+8% from last week</p>
+                        </div>
+                        <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-users text-green-600 text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bot Uptime -->
+                <div class="bg-white rounded-xl shadow-lg p-6 card-hover" id="uptimeCard">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-600 text-sm font-medium">Bot Uptime</p>
+                            <p class="text-3xl font-bold text-gray-800" id="uptime">0d 0h 0m</p>
+                            <p class="text-gray-500 text-sm mt-1">Last updated: <span id="uptimeTime">Loading...</span></p>
+                        </div>
+                        <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-clock text-purple-600 text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Server Status -->
+                <div class="bg-white rounded-xl shadow-lg p-6 card-hover" id="serverStatusCard">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-600 text-sm font-medium">Server Status</p>
+                            <p class="text-3xl font-bold text-green-600" id="serverStatus">Online</p>
+                            <p class="text-gray-500 text-sm mt-1">Last updated: <span id="statusTime">Loading...</span></p>
+                        </div>
+                        <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-server text-green-600 text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <button onclick="showUsers()" 
+                        class="bg-white rounded-xl shadow-lg p-6 text-left hover:shadow-xl transition-all transform hover:scale-105">
+                    <div class="flex items-center space-x-4">
+                        <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-users text-blue-600 text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-800">Manage Users</h3>
+                            <p class="text-gray-600">View and manage bot users</p>
+                        </div>
+                    </div>
+                </button>
+
+                <button onclick="showBotSettings()" 
+                        class="bg-white rounded-xl shadow-lg p-6 text-left hover:shadow-xl transition-all transform hover:scale-105">
+                    <div class="flex items-center space-x-4">
+                        <div class="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-cog text-yellow-600 text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-800">Bot Settings</h3>
+                            <p class="text-gray-600">Configure bot parameters</p>
+                        </div>
+                    </div>
+                </button>
+
+                <button onclick="showAnalytics()" 
+                        class="bg-white rounded-xl shadow-lg p-6 text-left hover:shadow-xl transition-all transform hover:scale-105">
+                    <div class="flex items-center space-x-4">
+                        <div class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-chart-line text-red-600 text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-800">Analytics</h3>
+                            <p class="text-gray-600">View detailed statistics</p>
+                        </div>
+                    </div>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Users Modal -->
+    <div id="usersModal" class="fixed inset-0 z-50 hidden flex items-center justify-center modal-backdrop">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-4xl mx-4 max-h-[80vh] overflow-hidden slide-in">
+            <div class="flex items-center justify-between p-6 border-b">
+                <h2 class="text-2xl font-bold text-gray-800">User Management</h2>
+                <button onclick="hideUsers()" class="text-gray-500 hover:text-gray-700 text-2xl">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="p-6 overflow-y-auto max-h-[60vh]" id="usersList">
+                <!-- Users will be populated here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Bot Settings Modal -->
+    <div id="botSettingsModal" class="fixed inset-0 z-50 hidden flex items-center justify-center modal-backdrop">
+        <div class="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md mx-4 slide-in">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-bold text-gray-800">Bot Settings</h2>
+                <button onclick="hideBotSettings()" class="text-gray-500 hover:text-gray-700 text-2xl">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="botSettingsForm" class="space-y-6">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Bot Name</label>
+                    <input type="text" id="botNameInput" required 
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Bot Avatar URL</label>
+                    <input type="text" id="botAvatarInput" required 
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Contact URL</label>
+                    <input type="text" id="contactUrlInput" required 
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
+                </div>
+                <button type="submit" 
+                        class="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white py-3 rounded-lg font-semibold hover:from-blue-600 hover:to-purple-700 transition-all transform hover:scale-105">
+                    Save Settings
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Analytics Modal -->
+    <div id="analyticsModal" class="fixed inset-0 z-50 hidden flex items-center justify-center modal-backdrop">
+        <div class="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-4xl mx-4 slide-in">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-bold text-gray-800">Analytics</h2>
+                <button onclick="hideAnalytics()" class="text-gray-500 hover:text-gray-700 text-2xl">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="space-y-6">
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-800">Command Usage</h3>
+                    <canvas id="commandUsageChart"></canvas>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-800">User Activity</h3>
+                    <canvas id="userActivityChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmationModal" class="fixed inset-0 z-[100] hidden flex items-center justify-center modal-backdrop">
+        <div class="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md mx-4 slide-in">
+            <div class="text-center">
+                <div id="confirmIcon" class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i id="confirmIconClass" class="text-white text-2xl"></i>
+                </div>
+                <h3 id="confirmTitle" class="text-xl font-bold text-gray-800 mb-2"></h3>
+                <p id="confirmMessage" class="text-gray-600 mb-6"></p>
+                
+                <div class="flex space-x-4">
+                    <button onclick="hideConfirmation()" 
+                            class="flex-1 px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition-all">
+                        Cancel
+                    </button>
+                    <button id="confirmButton" onclick="executeAction()" 
+                            class="flex-1 px-4 py-2 text-white rounded-lg transition-all">
+                        Confirm
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/js/admin.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script type="importmap">
+        {
+            "imports": {
+                "chart.js": "https://cdn.jsdelivr.net/npm/chart.js"
+            }
+        }
+    </script>
+    <script type="importmap">
+        {
+            "imports": {
+                "chart.js": "https://cdn.jsdelivr.net/npm/chart.js"
+            }
+        }
+    </script>
+</body>
+</html>

@@ -6,9 +6,10 @@ const UserSchema = new mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  joinedAt: { type: Date, default: Date.now },
+  createdAt: { type: Date, default: Date.now }, 
   emailVerified: { type: Boolean, default: false },
   isAdmin: { type: Boolean, default: false },
+  isBanned: { type: Boolean, default: false }, 
   cooldowns: { type: Map, of: Date, default: new Map() }
 });
 

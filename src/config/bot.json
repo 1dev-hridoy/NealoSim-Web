@@ -1,12 +1,12 @@
 {
-    "botName": "NexaBot",
-    "botAvatar": "https://avatars.githubusercontent.com/u/214806560?v=4",
-    "adminName": "Hridoy",
-    "contactUrl": "https://t.me/dev_hridoy",
-    "contactButton": "Contact Support",
-    "description": "Your friendly web assistant bot!",
-    "prefix": "!",
-    "adminUID": "7f6ef5d7-9f95-428d-be31-012a500ab2f6",
-    "allowSignup": true,
-    "language": "bn"
-  }
+  "botName": "Nexalo",
+  "botAvatar": "https://avatars.githubusercontent.com/u/214806560?v=4",
+  "adminName": "Hridoy",
+  "contactUrl": "https://t.me/dev_hridoy",
+  "contactButton": "Contact Support",
+  "description": "Your friendly web assistant bot!",
+  "prefix": "!",
+  "adminUID": "7f6ef5d7-9f95-428d-be31-012a500ab2f6",
+  "allowSignup": true,
+  "language": "bn"
+}
