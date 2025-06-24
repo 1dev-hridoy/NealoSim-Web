@@ -13,19 +13,20 @@ dotenv.config();
 const app = express();
 app.use(express.json());
 
+/*
 app.use((req, res, next) => {
-  if (req.path.includes('.css') || req.path.includes('.js')) {
-      res.status(403).send(`
-
-              <h1>403 Forbidden</h1>
-              <h2>You don't have permission to access this resource.</h2>
-              <p>Additionally, a 403 Forbidden error was encountered while trying to use an ErrorDocument to handle the request.</p>
-          
-      `);
-      return;
-  }
-  next();
+    if (req.path.includes('.css') || req.path.includes('.js')) {
+        res.status(403).send(`
+            <h1>403 Forbidden</h1>
+            <h2>You don't have permission to access this resource.</h2>
+            <p>Additionally, a 403 Forbidden error was encountered while trying to use an ErrorDocument to handle the request.</p>
+        `);
+        return;
+    }
+    next();
 });
+*/
+
 
 
 app.use(express.static(path.join(__dirname, 'public')));
