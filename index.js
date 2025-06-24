@@ -13,7 +13,7 @@ dotenv.config();
 const app = express();
 app.use(express.json());
 
-app.use((req, res, next) => {
+/*app.use((req, res, next) => {
     if (req.path.includes('.css') || req.path.includes('.js')) {
         res.status(403).send(`
             Forbidden
@@ -24,8 +24,7 @@ app.use((req, res, next) => {
         return;
     }
     next();
-});
-
+});*/
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/temp', express.static(path.join(__dirname, 'temp')));
