@@ -13,24 +13,27 @@ dotenv.config();
 const app = express();
 app.use(express.json());
 
-/*
 app.use((req, res, next) => {
     if (req.path.includes('.css') || req.path.includes('.js')) {
         res.status(403).send(`
-            <h1>403 Forbidden</h1>
-            <h2>You don't have permission to access this resource.</h2>
-            <p>Additionally, a 403 Forbidden error was encountered while trying to use an ErrorDocument to handle the request.</p>
+            Forbidden
+            You don't have permission to access this resource.
+            
+            Additionally, a 403 Forbidden error was encountered while trying to use an ErrorDocument to handle the request.
         `);
         return;
     }
     next();
 });
-*/
-
 
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/temp', express.static(path.join(__dirname, 'temp')));
+
+
+app.get('/auth', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public/auth.html'));
+});
 
 console.log(chalk.cyanBright('NexaBot Server v1.0.0 - Powered by Node.js & MongoDB'));
 
