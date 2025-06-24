@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bot Chat Interface</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body data-theme="dark" class="antialiased">
+    <div class="flex flex-col h-screen">
+        <!-- Navbar -->
+        <nav class="navbar">
+            <div class="bot-info">
+                <div class="bot-avatar">
+                    <img id="botAvatar" src="" alt="Bot Avatar" class="w-full h-full rounded-full object-cover">
+                    <div class="status-indicator"></div>
+                </div>
+                <div class="bot-details">
+                    <div class="bot-name" id="botName">Loading...</div>
+                    <div class="bot-status">Online</div>
+                </div>
+            </div>
+            <div class="navbar-actions">
+                <div class="username-display" id="usernameDisplay">John Doe</div>
+                <div class="nav-item" id="settingsButton">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                    <div class="settings-dropdown" id="settingsDropdown">
+                        <div class="settings-item" id="themeToggleItem">
+                            <div class="settings-label">
+                                <i class="fas fa-palette"></i>
+                                <span>Theme</span>
+                            </div>
+                            <div class="theme-toggle" id="themeToggle">
+                                <div class="theme-toggle-slider">
+                                    <i class="fas fa-moon"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="settings-item" id="profileButton">
+                            <div class="settings-label">
+                                <i class="fas fa-user"></i>
+                                <span>Profile</span>
+                            </div>
+                        </div>
+                        <div class="settings-item" id="contactButton">
+                            <div class="settings-label">
+                                <i class="fas fa-envelope"></i>
+                                <span>Contact Support</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button class="nav-item logout" id="logoutButton">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </button>
+            </div>
+        </nav>
+        
+        <!-- Chat Area -->
+        <div class="chat-area">
+            <div class="chat-messages" id="chatMessages">
+                <div class="message">
+                    <div class="message-content">
+                        <div class="message-avatar">N</div>
+                        <div class="message-body">
+                            <div class="message-header">
+                                <span class="message-author" id="botMessageAuthor">Loading...</span>
+                                <span class="message-timestamp">Today at 12:00 PM</span>
+                            </div>
+                            <div class="message-text">Hello! I'm your AI assistant. I can help you with various tasks and handle different types of media files. Try the new theme toggle in settings!</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="typing-indicator" id="typingIndicator">
+                <i class="fas fa-circle-notch fa-spin mr-2"></i>
+                <span id="typingBotName">Loading...</span> is typing...
+            </div>
+            <div class="chat-input-area">
+                <div class="chat-input-container">
+                    <textarea 
+                        class="chat-input" 
+                        id="chatInput"
+                        placeholder="Type your message here..."
+                        rows="1"
+                    ></textarea>
+                    <div class="input-actions">
+                        <button class="input-button" title="Attach File">
+                            <i class="fas fa-paperclip"></i>
+                        </button>
+                        <button class="input-button" title="Add Emoji">
+                            <i class="fas fa-smile"></i>
+                        </button>
+                        <button class="input-button send-button" id="sendButton" title="Send Message">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile Modal -->
+        <div id="profileModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+            <div class="bg-gray-800 text-white rounded-lg w-full max-w-md p-6 relative">
+                <button id="closeProfileModal" class="absolute top-2 right-2 text-gray-400 hover:text-white">
+                    <i class="fas fa-times"></i>
+                </button>
+                <h2 class="text-xl font-bold mb-4">User Profile</h2>
+                <div id="profileContent" class="space-y-2">
+                    <p><strong>Username:</strong> <span id="profileUsername">Loading...</span></p>
+                    <p><strong>UID:</strong> <span id="profileUID">Loading...</span></p>
+                    <p><strong>Joined:</strong> <span id="profileJoined">Loading...</span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/js/app.js"></script>
+</body>
+</html>

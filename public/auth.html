@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexaBot - Sign Up & Sign In</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+
+:root {
+
+  --discord-blurple: #5865f2;
+  --discord-blurple-dark: #4752c4;
+  --discord-blurple-darker: #3c45a5;
+  --discord-green: #57f287;
+  --discord-green-dark: #3ba55d;
+  --discord-red: #ed4245;
+  --discord-red-dark: #c73e41;
+  --discord-yellow: #fee75c;
+  --discord-fuchsia: #eb459e;
+  
+  --discord-dark: #2c2f33;
+  --discord-darker: #23272a;
+  --discord-darkest: #1e2124;
+  --discord-gray-dark: #36393f;
+  --discord-gray: #4f545c;
+  --discord-gray-light: #72767d;
+  --discord-gray-lighter: #b9bbbe;
+  --discord-white: #ffffff;
+  
+
+  --glass-bg: rgba(35, 39, 42, 0.95);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-shadow: 0 32px 64px -12px rgba(0, 0, 0, 0.4);
+  
+
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.3s ease;
+  --transition-slow: 0.5s ease;
+}
+
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #5865f2 100%);
+  background-attachment: fixed;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  position: relative;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: 
+    radial-gradient(circle at 20% 80%, rgba(88, 101, 242, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(235, 69, 158, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 40% 40%, rgba(87, 242, 135, 0.1) 0%, transparent 50%);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.floating-shapes {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.shape {
+  position: absolute;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(88, 101, 242, 0.1), rgba(235, 69, 158, 0.1));
+  animation: float 12s ease-in-out infinite;
+  filter: blur(1px);
+}
+
+.shape:nth-child(1) {
+  width: 120px;
+  height: 120px;
+  top: 10%;
+  left: 10%;
+  animation-delay: 0s;
+  background: linear-gradient(135deg, rgba(88, 101, 242, 0.08), rgba(87, 242, 135, 0.08));
+}
+
+.shape:nth-child(2) {
+  width: 80px;
+  height: 80px;
+  top: 70%;
+  right: 15%;
+  animation-delay: 4s;
+  background: linear-gradient(135deg, rgba(235, 69, 158, 0.08), rgba(254, 231, 92, 0.08));
+}
+
+.shape:nth-child(3) {
+  width: 100px;
+  height: 100px;
+  bottom: 15%;
+  left: 20%;
+  animation-delay: 8s;
+  background: linear-gradient(135deg, rgba(87, 242, 135, 0.08), rgba(88, 101, 242, 0.08));
+}
+
+.shape:nth-child(4) {
+  width: 60px;
+  height: 60px;
+  top: 30%;
+  right: 30%;
+  animation-delay: 2s;
+  background: linear-gradient(135deg, rgba(254, 231, 92, 0.08), rgba(235, 69, 158, 0.08));
+}
+
+@keyframes float {
+  0%, 100% { 
+    transform: translateY(0px) translateX(0px) rotate(0deg); 
+    opacity: 0.7;
+  }
+  25% { 
+    transform: translateY(-20px) translateX(10px) rotate(90deg); 
+    opacity: 1;
+  }
+  50% { 
+    transform: translateY(-10px) translateX(-10px) rotate(180deg); 
+    opacity: 0.8;
+  }
+  75% { 
+    transform: translateY(-30px) translateX(5px) rotate(270deg); 
+    opacity: 0.9;
+  }
+}
+
+.auth-container {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+
+.glass-morphism {
+  background: var(--glass-bg);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid var(--glass-border);
+  border-radius: 24px;
+  box-shadow: 
+    var(--glass-shadow),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    0 0 0 1px rgba(255, 255, 255, 0.05);
+  padding: 3rem 2.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.glass-morphism::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+}
+
+.logo-section {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.logo-icon {
+  display: inline-flex;
+  items-center;
+  justify-center;
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, var(--discord-blurple), var(--discord-fuchsia));
+  border-radius: 20px;
+  margin-bottom: 1.5rem;
+  position: relative;
+  box-shadow: 
+    0 20px 40px rgba(88, 101, 242, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  animation: glow 3s ease-in-out infinite alternate;
+}
+
+.logo-icon::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  background: linear-gradient(135deg, var(--discord-blurple), var(--discord-fuchsia));
+  border-radius: 22px;
+  z-index: -1;
+  filter: blur(8px);
+  opacity: 0.7;
+}
+
+.logo-icon i {
+  color: white;
+  font-size: 2rem;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+@keyframes glow {
+  0% { box-shadow: 0 20px 40px rgba(88, 101, 242, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2); }
+  100% { box-shadow: 0 25px 50px rgba(88, 101, 242, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.3); }
+}
+
+.logo-title {
+  color: var(--discord-white);
+  font-size: 2.5rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin: 0;
+  background: linear-gradient(135deg, #ffffff, #e0e7ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.form-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.form-title {
+  color: var(--discord-white);
+  font-size: 1.875rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.01em;
+}
+
+.form-subtitle {
+  color: var(--discord-gray-lighter);
+  font-size: 1rem;
+  font-weight: 400;
+  margin: 0;
+  opacity: 0.9;
+}
+
+.alert {
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  items-center;
+  justify-content: space-between;
+  font-weight: 500;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.alert-success {
+  background: linear-gradient(135deg, rgba(87, 242, 135, 0.15), rgba(59, 165, 93, 0.15));
+  color: var(--discord-green);
+  border-color: rgba(87, 242, 135, 0.3);
+}
+
+.alert-error {
+  background: linear-gradient(135deg, rgba(237, 66, 69, 0.15), rgba(199, 62, 65, 0.15));
+  color: var(--discord-red);
+  border-color: rgba(237, 66, 69, 0.3);
+}
+
+.alert-close {
+  background: none;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 6px;
+  transition: background-color var(--transition-fast);
+}
+
+.alert-close:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+  margin-bottom: 1.25rem;
+}
+
+.form-label {
+  display: block;
+  color: var(--discord-gray-lighter);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.5rem;
+}
+
+.form-label .required {
+  color: var(--discord-red);
+  margin-left: 2px;
+}
+
+.input-field {
+  width: 100%;
+  background: rgba(35, 39, 42, 0.8);
+  border: 2px solid rgba(79, 84, 92, 0.4);
+  border-radius: 8px;
+  padding: 0.875rem 1rem;
+  color: var(--discord-white);
+  font-size: 1rem;
+  font-weight: 400;
+  transition: all var(--transition-normal);
+  outline: none;
+  position: relative;
+}
+
+.input-field::placeholder {
+  color: var(--discord-gray-light);
+  opacity: 0.8;
+}
+
+.input-field:focus {
+  background: rgba(35, 39, 42, 0.95);
+  border-color: var(--discord-blurple);
+  box-shadow: 
+    0 0 0 3px rgba(88, 101, 242, 0.15),
+    0 8px 16px rgba(0, 0, 0, 0.1);
+  transform: translateY(-1px);
+}
+
+.input-field.error {
+  border-color: var(--discord-red);
+  box-shadow: 0 0 0 3px rgba(237, 66, 69, 0.15);
+}
+
+.input-field.error:focus {
+  border-color: var(--discord-red);
+  box-shadow: 0 0 0 3px rgba(237, 66, 69, 0.15);
+}
+
+.password-field {
+  position: relative;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: var(--discord-gray-light);
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 4px;
+  transition: color var(--transition-fast);
+}
+
+.password-toggle:hover {
+  color: var(--discord-white);
+}
+
+.error-message {
+  color: var(--discord-red);
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-top: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+.error-message::before {
+  content: '⚠';
+  font-size: 0.75rem;
+}
+
+.btn-primary {
+  width: 100%;
+  background: linear-gradient(135deg, var(--discord-blurple) 0%, var(--discord-blurple-dark) 100%);
+  border: none;
+  border-radius: 8px;
+  padding: 0.875rem 1.5rem;
+  color: var(--discord-white);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 8px 16px rgba(88, 101, 242, 0.3);
+}
+
+.btn-primary::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, var(--discord-blurple-dark) 0%, var(--discord-blurple-darker) 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px rgba(88, 101, 242, 0.4);
+}
+
+.btn-primary:hover::before {
+  left: 100%;
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 8px rgba(88, 101, 242, 0.3);
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: 0 4px 8px rgba(88, 101, 242, 0.2);
+}
+
+.btn-primary:disabled:hover {
+  transform: none;
+  box-shadow: 0 4px 8px rgba(88, 101, 242, 0.2);
+}
+
+.loading-spinner {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.loading-spinner i {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.form-switch {
+  text-align: center;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.form-switch-text {
+  color: var(--discord-gray-light);
+  font-size: 0.875rem;
+  margin-right: 0.5rem;
+}
+
+.form-switch-link {
+  color: var(--discord-blurple);
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  position: relative;
+}
+
+.form-switch-link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--discord-blurple);
+  transition: width var(--transition-normal);
+}
+
+.form-switch-link:hover {
+  color: var(--discord-blurple-dark);
+}
+
+.form-switch-link:hover::after {
+  width: 100%;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.6s ease-out;
+}
+
+@media (max-width: 640px) {
+  .auth-container {
+    padding: 1rem;
+  }
+  
+  .glass-morphism {
+    padding: 2rem 1.5rem;
+    border-radius: 16px;
+  }
+  
+  .logo-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 16px;
+  }
+  
+  .logo-icon i {
+    font-size: 1.5rem;
+  }
+  
+  .logo-title {
+    font-size: 2rem;
+  }
+  
+  .form-title {
+    font-size: 1.5rem;
+  }
+}
+
+@media (prefers-contrast: high) {
+  .glass-morphism {
+    background: rgba(35, 39, 42, 0.98);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+  }
+  
+  .input-field {
+    border-width: 2px;
+  }
+  
+  .btn-primary {
+    border: 2px solid var(--discord-blurple-dark);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  .shape {
+    animation: none;
+  }
+  
+  .logo-icon {
+    animation: none;
+  }
+}
+    </style>
+</head>
+<body class="discord-bg min-h-screen flex items-center justify-center p-4">
+    <div class="floating-shapes">
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+    </div>
+
+    <div x-data="authApp()" class="relative z-10 w-full max-w-md">
+        <div class="glass-morphism rounded-2xl p-8 animate-fade-in">
+            <div class="text-center mb-8">
+                <div class="inline-flex items-center justify-center w-20 h-20 bg-discord-blurple rounded-full mb-6 animate-glow">
+                    <i class="fas fa-robot text-white text-3xl"></i>
+                </div>
+                <h1 class="text-white text-3xl font-bold tracking-tight">NexaBot</h1>
+            </div>
+
+            <div x-show="alert.show" 
+                 x-transition:enter="transition ease-out duration-300"
+                 x-transition:enter-start="opacity-0 scale-95"
+                 x-transition:enter-end="opacity-100 scale-100"
+                 x-transition:leave="transition ease-in duration-200"
+                 x-transition:leave-start="opacity-100 scale-100"
+                 x-transition:leave-end="opacity-0 scale-95"
+                 class="mb-6">
+                <div :class="alert.type === 'error' ? 'bg-discord-red' : 'bg-discord-green'"
+                     class="rounded-lg p-4 text-white flex items-center justify-between">
+                    <div class="flex items-center">
+                        <i :class="alert.type === 'error' ? 'fas fa-exclamation-triangle' : 'fas fa-check-circle'" 
+                           class="mr-3 text-lg"></i>
+                        <span x-text="alert.message" class="font-medium"></span>
+                    </div>
+                    <button @click="hideAlert()" class="ml-4 hover:bg-black hover:bg-opacity-20 rounded p-1">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div x-show="currentForm === 'signin'" 
+                 x-transition:enter="transition ease-out duration-300"
+                 x-transition:enter-start="opacity-0 transform translate-x-4"
+                 x-transition:enter-end="opacity-100 transform translate-x-0">
+                <div class="text-center mb-8">
+                    <h2 class="text-white text-2xl font-bold mb-2">Welcome back!</h2>
+                    <p class="text-discord-gray-lighter text-base">Login to chat with NexaBot!</p>
+                </div>
+
+                <form @submit.prevent="handleSignIn" class="space-y-5">
+                    <div>
+                        <label class="block text-discord-gray-lighter text-xs font-bold uppercase tracking-wider mb-2">
+                            Email <span class="text-discord-red">*</span>
+                        </label>
+                        <input x-model="signin.email" 
+                               type="email" 
+                               required
+                               :class="{ 'error': errors.signin.email }"
+                               class="input-field w-full rounded-md px-4 py-3 text-white placeholder-discord-gray-light focus:outline-none"
+                               placeholder="Enter your email">
+                        <p x-show="errors.signin.email" class="text-discord-red text-sm mt-1" x-text="errors.signin.email"></p>
+                    </div>
+
+                    <div>
+                        <label class="block text-discord-gray-lighter text-xs font-bold uppercase tracking-wider mb-2">
+                            Password <span class="text-discord-red">*</span>
+                        </label>
+                        <div class="relative">
+                            <input x-model="signin.password" 
+                                   :type="showPassword.signin ? 'text' : 'password'"
+                                   required
+                                   :class="{ 'error': errors.signin.password }"
+                                   class="input-field w-full rounded-md px-4 py-3 pr-12 text-white placeholder-discord-gray-light focus:outline-none"
+                                   placeholder="Enter your password">
+                            <button type="button" 
+                                    @click="showPassword.signin = !showPassword.signin"
+                                    class="absolute right-4 top-1/2 transform -translate-y-1/2 text-discord-gray-light hover:text-white transition-colors">
+                                <i :class="showPassword.signin ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
+                            </button>
+                        </div>
+                        <p x-show="errors.signin.password" class="text-discord-red text-sm mt-1" x-text="errors.signin.password"></p>
+                    </div>
+
+                    <button type="submit" 
+                            :disabled="loading"
+                            class="btn-primary w-full rounded-md py-3 px-4 text-white font-semibold text-base disabled:opacity-50 disabled:cursor-not-allowed">
+                        <span x-show="!loading">Log In</span>
+                        <span x-show="loading" class="flex items-center justify-center">
+                            <i class="fas fa-spinner fa-spin mr-2"></i>
+                            Signing in...
+                        </span>
+                    </button>
+                </form>
+
+                <div class="text-center mt-6">
+                    <span class="text-discord-gray-light text-sm">Need an account? </span>
+                    <button @click="switchForm('signup')" class="text-discord-blurple font-medium hover:underline">
+                        Register
+                    </button>
+                </div>
+            </div>
+
+            <div x-show="currentForm === 'signup'" 
+                 x-transition:enter="transition ease-out duration-300"
+                 x-transition:enter-start="opacity-0 transform translate-x-4"
+                 x-transition:enter-end="opacity-100 transform translate-x-0">
+                <div class="text-center mb-8">
+                    <h2 class="text-white text-2xl font-bold mb-2">Create an account</h2>
+                    <p class="text-discord-gray-lighter text-base">Join NexaBot today!</p>
+                </div>
+
+                <form @submit.prevent="handleSignUp" class="space-y-5">
+                    <div>
+                        <label class="block text-discord-gray-lighter text-xs font-bold uppercase tracking-wider mb-2">
+                            Name <span class="text-discord-red">*</span>
+                        </label>
+                        <input x-model="signup.name" 
+                               type="text" 
+                               required
+                               :class="{ 'error': errors.signup.name }"
+                               class="input-field w-full rounded-md px-4 py-3 text-white placeholder-discord-gray-light focus:outline-none"
+                               placeholder="Enter your name">
+                        <p x-show="errors.signup.name" class="text-discord-red text-sm mt-1" x-text="errors.signup.name"></p>
+                    </div>
+
+                    <div>
+                        <label class="block text-discord-gray-lighter text-xs font-bold uppercase tracking-wider mb-2">
+                            Email <span class="text-discord-red">*</span>
+                        </label>
+                        <input x-model="signup.email" 
+                               type="email" 
+                               required
+                               :class="{ 'error': errors.signup.email }"
+                               class="input-field w-full rounded-md px-4 py-3 text-white placeholder-discord-gray-light focus:outline-none"
+                               placeholder="Enter your email">
+                        <p x-show="errors.signup.email" class="text-discord-red text-sm mt-1" x-text="errors.signup.email"></p>
+                    </div>
+
+                    <div>
+                        <label class="block text-discord-gray-lighter text-xs font-bold uppercase tracking-wider mb-2">
+                            Password <span class="text-discord-red">*</span>
+                        </label>
+                        <div class="relative">
+                            <input x-model="signup.password" 
+                                   :type="showPassword.signup ? 'text' : 'password'"
+                                   required
+                                   :class="{ 'error': errors.signup.password }"
+                                   @input="validatePassword"
+                                   class="input-field w-full rounded-md px-4 py-3 pr-12 text-white placeholder-discord-gray-light focus:outline-none"
+                                   placeholder="Enter your password">
+                            <button type="button" 
+                                    @click="showPassword.signup = !showPassword.signup"
+                                    class="absolute right-4 top-1/2 transform -translate-y-1/2 text-discord-gray-light hover:text-white transition-colors">
+                                <i :class="showPassword.signup ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
+                            </button>
+                        </div>
+                        <p x-show="errors.signup.password" class="text-discord-red text-sm mt-1" x-text="errors.signup.password"></p>
+                    </div>
+
+                    <button type="submit" 
+                            :disabled="loading"
+                            class="btn-primary w-full rounded-md py-3 px-4 text-white font-semibold text-base disabled:opacity-50 disabled:cursor-not-allowed">
+                        <span x-show="!loading">Continue</span>
+                        <span x-show="loading" class="flex items-center justify-center">
+                            <i class="fas fa-spinner fa-spin mr-2"></i>
+                            Creating account...
+                        </span>
+                    </button>
+                </form>
+
+                <div class="text-center mt-6">
+                    <button @click="switchForm('signin')" class="text-discord-blurple font-medium hover:underline">
+                        Already have an account?
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function authApp() {
+            return {
+                currentForm: 'signin',
+                loading: false,
+                showPassword: {
+                    signin: false,
+                    signup: false
+                },
+                alert: {
+                    show: false,
+                    type: 'error',
+                    message: ''
+                },
+                signin: {
+                    email: '',
+                    password: ''
+                },
+                signup: {
+                    name: '',
+                    email: '',
+                    password: ''
+                },
+                errors: {
+                    signin: { email: '', password: '' },
+                    signup: { name: '', email: '', password: '' }
+                },
+                switchForm(form) {
+                    this.currentForm = form;
+                    this.hideAlert();
+                    this.resetForms();
+                },
+                showAlert(type, message) {
+                    this.alert = { show: true, type, message };
+                    setTimeout(() => this.hideAlert(), 5000);
+                },
+                hideAlert() {
+                    this.alert.show = false;
+                },
+                resetForms() {
+                    this.signin = { email: '', password: '' };
+                    this.signup = { name: '', email: '', password: '' };
+                    this.errors = {
+                        signin: { email: '', password: '' },
+                        signup: { name: '', email: '', password: '' }
+                    };
+                },
+                validatePassword() {
+                    if (this.signup.password.length < 6) {
+                        this.errors.signup.password = 'Password must be at least 6 characters';
+                    } else {
+                        this.errors.signup.password = '';
+                    }
+                },
+                async handleSignIn() {
+                    this.errors.signin = { email: '', password: '' };
+                    if (!this.signin.email) this.errors.signin.email = 'Email is required';
+                    if (!this.signin.password) this.errors.signin.password = 'Password is required';
+                    if (this.errors.signin.email || this.errors.signin.password) {
+                        this.showAlert('error', 'Please fix the errors in the form');
+                        return;
+                    }
+                    
+                    this.loading = true;
+                    
+                    try {
+                        const response = await fetch('/api/auth/signin', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(this.signin)
+                        });
+                        const data = await response.json();
+                        if (response.ok) {
+                            localStorage.setItem('uid', data.uid);
+                            this.showAlert('success', 'Login successful! Redirecting...');
+                            setTimeout(() => window.location.href = '/', 1500);
+                        } else {
+                            this.showAlert('error', data.error || 'Login failed');
+                            if (data.error === 'Invalid credentials') {
+                                this.errors.signin.email = 'Invalid email or password';
+                                this.errors.signin.password = 'Invalid email or password';
+                            }
+                        }
+                    } catch (error) {
+                        this.showAlert('error', 'Server error. Please try again');
+                    } finally {
+                        this.loading = false;
+                    }
+                },
+                async handleSignUp() {
+                    this.errors.signup = { name: '', email: '', password: '' };
+                    if (!this.signup.name) this.errors.signup.name = 'Name is required';
+                    if (!this.signup.email) this.errors.signup.email = 'Email is required';
+                    if (!this.signup.password) this.errors.signup.password = 'Password is required';
+                    if (this.signup.password.length < 6) this.errors.signup.password = 'Password must be at least 6 characters';
+                    if (this.errors.signup.name || this.errors.signup.email || this.errors.signup.password) {
+                        this.showAlert('error', 'Please fix the errors in the form');
+                        return;
+                    }
+                    
+                    this.loading = true;
+                    
+                    try {
+                        const response = await fetch('/api/auth/signup', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(this.signup)
+                        });
+                        const data = await response.json();
+                        if (response.ok) {
+                            localStorage.setItem('uid', data.uid);
+                            this.showAlert('success', 'Account created! Redirecting...');
+                            setTimeout(() => window.location.href = '/', 1500);
+                        } else {
+                            this.showAlert('error', data.error || 'Signup failed');
+                            if (data.error === 'Email already exists') {
+                                this.errors.signup.email = 'Email already exists';
+                            } else if (data.error === 'Password must be at least 6 characters') {
+                                this.errors.signup.password = 'Password must be at least 6 characters';
+                            }
+                        }
+                    } catch (error) {
+                        this.showAlert('error', 'Server error. Please try again');
+                    } finally {
+                        this.loading = false;
+                    }
+                }
+            }
+        }
+    </script>
+</body>
+</html>
